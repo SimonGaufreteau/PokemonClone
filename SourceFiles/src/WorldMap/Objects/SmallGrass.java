@@ -1,4 +1,4 @@
 package WorldMap.Objects;
 
-public class SmallGrass {
+public class SmallGrass extends Grass {
 }

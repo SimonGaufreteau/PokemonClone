@@ -1,4 +1,4 @@
 package WorldMap.Objects;
 
-public class Rock {
+public class Rock extends BreakeableObject {
 }

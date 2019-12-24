@@ -1,4 +1,4 @@
 package WorldMap.Objects;
 
-public class Square {
+public interface Surfable {
 }

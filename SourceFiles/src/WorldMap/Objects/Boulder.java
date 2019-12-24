@@ -1,4 +1,4 @@
 package WorldMap.Objects;
 
-public class Boulder {
+public class Boulder extends MoveableObject {
 }

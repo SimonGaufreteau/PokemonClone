@@ -1,10 +1,11 @@
 package WorldMap;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class Region {
     String name;
-    Map map;
+    Mapper mapper;
     String type;
     /*Building the region from a file.
     File template :
@@ -13,7 +14,7 @@ public class Region {
     Name : Route 1
     MapFile : MapfileRoute1.txt
      */
-    public Region(String regionFile) throws IOException {
+    public Region(String regionFile) throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         File file = new File(regionFile);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -31,7 +32,7 @@ public class Region {
                     this.name = splitted[1];
                     break;
                 case "MapFile" :
-                    this.map= new Map(splitted[1]);
+                    this.mapper = new Mapper(splitted[1]);
                     break;
                 default :
                     System.out.println("Unrecognized line in Region File : "+st);
@@ -43,11 +44,14 @@ public class Region {
     public Region() {
         this.type="N";
         this.name="N";
-        this.map=null;
+        this.mapper =null;
     }
 
 
     public String getName() {
         return this.name;
+    }
+    public String getType() {
+        return this.type;
     }
 }
