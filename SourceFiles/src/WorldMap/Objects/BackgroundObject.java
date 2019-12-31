@@ -12,4 +12,9 @@ public class BackgroundObject {
     }
 
     //Only String display for now.
+
+    @Override
+    public String toString() {
+        return displayString;
+    }
 }

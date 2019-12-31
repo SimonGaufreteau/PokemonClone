@@ -54,4 +54,16 @@ public class Region {
     public String getType() {
         return this.type;
     }
+
+    public Mapper getMapper() {
+        return mapper;
+    }
+
+    public String toString(){
+        if (this.name.compareTo("N")==0) return "";
+        String s ="RegionName : "+name+"\n";
+        if(mapper!=null)
+            s+= "Map :\n"+this.mapper.toString();
+        return s;
+    }
 }

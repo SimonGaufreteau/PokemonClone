@@ -61,7 +61,7 @@ public class Mapper {
    001 = {SpecialObject : false , Name : Ground1 , DisplayType : String , Display : "G"}
    002 = {SpecialObject : false , Name : Road1 , DisplayType : String , Display : "R1"}
    003 = {SpecialObject : false , Name : Road2 , DisplayType : String , Display : "R2"}
-   004 = {SpecialObject : true , Class : Water , Name : Water1 , DisplayType : String , Display : "~"}
+   004 = {SpecialObject : true , Class : WorldMap.Objects.Water , Name : Water1 , DisplayType : String , Display : "~"}
 
    FrontMapId :
    001 = {SpecialObject : true , Class : SmallGrass , Name : SmallGrass1 , DisplayType : String , Display : "G"}
@@ -82,7 +82,7 @@ public class Mapper {
 
    */
     public Mapper(String mapFile) throws IOException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        File file = new File(mapFile);
+        File file = new File("D:\\Documents\\Programmation\\Pokemon_Replique_Files(Java)\\PokemonClone\\SourceFiles\\Maps\\"+mapFile);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -103,9 +103,11 @@ public class Mapper {
         String line;
         line=br.readLine();
         //Reading until we get the first map (which must be BackGroundMap
-        while (line!=null && line.compareTo("BackgroundMap : ")!=0){
+        while (line!=null && line.compareTo("BackgroundMap :")!=0){
             line=br.readLine();
         }
+        //Reading one more line to get started
+        line=br.readLine();
         //Now that we have the Map connecting ID to their characteristics, we read the map and create corresponding Square
         //Using the multimap we just created, we instantiate each square with their Background Object first. Front comes later
         this.squares= new ArrayList<>();
@@ -123,10 +125,11 @@ public class Mapper {
         }
 
         //Doing the same thing with the setter for FrontObject
-        while (line!=null && line.compareTo("FrontMap : ")!=0){
+        while (line!=null && line.compareTo("FrontMap :")!=0){
             line=br.readLine();
         }
-
+        //Reading one more line to get started
+        line = br.readLine();
         //Counting lines
         int lineCt=0;
         Square s;
@@ -134,7 +137,6 @@ public class Mapper {
         while(line!=null && line.compareTo("")!=0){
             //Getting all the ids of the line
             String[] splitID = line.split(" ");
-            squareLine = new ArrayList<>();
             for (int i = 0; i < splitID.length; i++) {
                 String id = splitID[i];
                 //Getting the square array line
@@ -147,8 +149,9 @@ public class Mapper {
                 lineFront.set(i,s);
                 squares.set(lineCt,lineFront);
             }
-            squares.add(squareLine);
+            //Reading a new line and counting
             line=br.readLine();
+            lineCt++;
         }
 
         //All squares have been set, end of the constructor.
@@ -159,22 +162,21 @@ public class Mapper {
 
 
     private void readID(Map<String, Map<String, String>> multiMap, BufferedReader br) throws IOException {
-        String st;
-        st = br.readLine();
-        while(st.compareTo("")==0){
+        String st= br.readLine();
+        while(st.compareTo("")==0 ||st.compareTo("FrontMapId :")==0||st.compareTo("BackgroundMapId :")==0){
             st = br.readLine();
         }
 
-        if (st.compareTo("BackgroundMapId :") == 0 || st.compareTo("FrontMapId :")==0) {
+        //if (st.compareTo("BackgroundMapId :") == 0 || st.compareTo("FrontMapId :")==0) {
             while (st != null && st.compareTo("") != 0) {
                 //Here we should have a line of the following type :
-                //004 = {SpecialObject : true , Class : Water , Name : Water1 , DisplayType : String , Display : "~"}
+                //004 = {SpecialObject : true , Class : WorldMap.Objects.Water , Name : Water1 , DisplayType : String , Display : "~"}
                 //We try to get : mainKey ="004" and mainValue a Map of the following elements in brackets
 
                 String[] splitter = st.split(" = ");
                 String mainKey = splitter[0];
                 //Replace { by nothing and split to get the keys and values.
-                String[] values = splitter[1].replace("{", "").split(" , ");
+                String[] values = splitter[1].replaceAll("[{}\"]", "").split(" , ");
 
                 //Creating a new "Dictionary" : Map<String,String>
                 Map<String, String> mainValue = new HashMap<>();
@@ -182,9 +184,10 @@ public class Mapper {
                 String value;
                 String key;
                 //Putting all key/value couples into the Map
-                while (i + 1 < values.length) {
-                    key = values[i];
-                    value = values[i + 1];
+                while (i< values.length) {
+                    String[] keyValue = values[i].split(" : ");
+                    key = keyValue[0];
+                    value = keyValue[1];
                     mainValue.put(key, value);
                     i++;
                 }
@@ -195,11 +198,25 @@ public class Mapper {
                 //Reading next ID
                 st = br.readLine();
             }
-        }
+        //}
     }
 
-    public ArrayList<ArrayList<Square>> getSquares() {
+    /*public ArrayList<ArrayList<Square>> getSquares() {
         return squares;
+    }*/
+
+    public String toString(){
+        StringBuilder frontMapString= new StringBuilder();
+        StringBuilder backgroundMapString= new StringBuilder();
+        for (ArrayList<Square> line:squares) {
+            for (Square s : line) {
+                backgroundMapString.append(s.getBackgroundObject().toString()).append(" | ");
+                frontMapString.append(s.getFrontObject().toString()).append(" | ");
+            }
+            backgroundMapString.append("\n");
+            frontMapString.append("\n");
+        }
+        return "FrontMap :\n"+frontMapString+"\nBackgroundMap :\n"+backgroundMapString;
     }
 }
 

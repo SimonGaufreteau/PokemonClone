@@ -1,6 +1,7 @@
 package WorldMap;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /*
@@ -33,7 +34,7 @@ public class World {
     Note : All Regions may not be of the same size.
      Each time the player crosses the limit of one border, the next Region will be loaded.
      */
-    public World(String fileName) throws IOException {
+    public World(String fileName) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
         File file = new File(fileName);
 
@@ -66,7 +67,7 @@ public class World {
                 //Getting the fileName out of the fileNames list.
                 //Only if the index!=0
                 if (Integer.parseInt(index)!=0){
-                    filePath =System.getProperty("user.dir")+ "\\SourceFiles\\Maps\\"+fileNames.get(Integer.parseInt(index)-1);
+                    filePath =System.getProperty("user.dir")+ "\\SourceFiles\\RegionMaps\\"+fileNames.get(Integer.parseInt(index)-1);
                     String regionFile = filePath;
                     //Creation and adding the region to the regionLine
                     regionLine.add(new Region(regionFile));
@@ -80,8 +81,19 @@ public class World {
         }
     }
 
+
     public ArrayList<ArrayList<Region>> getRegions(){
         return this.regions;
+    }
+
+    public String toDetailledMap(){
+        StringBuilder s = new StringBuilder();
+        for (ArrayList<Region> line:regions){
+            for (Region r:line) {
+                s.append(r.toString());
+            }
+        }
+        return s.toString();
     }
 
     public String toString(){

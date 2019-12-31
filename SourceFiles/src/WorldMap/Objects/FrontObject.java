@@ -8,4 +8,13 @@ public class FrontObject {
         this.displayString=display;
         this.name=name;
     }
+
+    //Creating a blank FrontObject (" " as a DisplayString)
+    public FrontObject() {
+        this("null"," ");
+    }
+
+    public String toString(){
+        return displayString;
+    }
 }
