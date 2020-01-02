@@ -1,6 +1,8 @@
 package worldMap;
 
 
+import exceptions.FileFormatException;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -81,7 +83,7 @@ public class Mapper {
    000 002 002 001
 
    */
-    public Mapper(String mapFile) throws IOException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public Mapper(String mapFile) throws IOException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, FileFormatException {
         File file = new File("D:\\Documents\\Programmation\\Pokemon_Replique_Files(Java)\\PokemonClone\\SourceFiles\\Maps\\"+mapFile);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -112,6 +114,19 @@ public class Mapper {
         //Using the multimap we just created, we instantiate each square with their Background Object first. Front comes later
         this.squares= new ArrayList<>();
         ArrayList<Square> squareLine;
+
+        //Counting the elements to be sure both maps are of the same size
+        //Note : The first line determines the number of elements on every line
+        boolean firstLine=true;
+        int lineSizeBGMap=0;
+        int lineAmountBGMap=0;
+        int lineSizeFMap=0;
+        int lineAmountFMap=0;
+
+        //Counting elements on each line
+        int elementsCounter =0;
+
+
         //Reading the Map while we don't get any blank line
         while(line!=null && line.compareTo("")!=0){
             //Getting all the ids of the line
@@ -119,19 +134,27 @@ public class Mapper {
             squareLine = new ArrayList<>();
             for (String id:splitID) {
                 squareLine.add(new Square(multiMapBackground.get(id)));
+
+                if(firstLine) lineSizeBGMap++;
+                elementsCounter++;
             }
+            //If not the right amount of elements on a line, throw Exception
+            if (elementsCounter!=lineSizeBGMap) throw new FileFormatException(mapFile);
+
+            elementsCounter=0;
+            firstLine = false;
             squares.add(squareLine);
             line=br.readLine();
+            lineAmountBGMap++;
         }
 
+        firstLine=true;
         //Doing the same thing with the setter for FrontObject
         while (line!=null && line.compareTo("FrontMap :")!=0){
             line=br.readLine();
         }
         //Reading one more line to get started
         line = br.readLine();
-        //Counting lines
-        int lineCt=0;
         Square s;
         ArrayList<Square> lineFront;
         while(line!=null && line.compareTo("")!=0){
@@ -140,22 +163,31 @@ public class Mapper {
             for (int i = 0; i < splitID.length; i++) {
                 String id = splitID[i];
                 //Getting the square array line
-                lineFront = squares.get(lineCt);
+                lineFront = squares.get(lineAmountFMap);
                 //Getting the square at the position we are interested in
                 s = lineFront.get(i);
                 //Setting the Front object of the square
                 s.setFrontObject(multiMapFront.get(id));
                 //Modifying the line with the new object
                 lineFront.set(i,s);
-                squares.set(lineCt,lineFront);
+                squares.set(lineAmountFMap,lineFront);
+
+                if (firstLine) lineSizeFMap++;
+                elementsCounter++;
             }
+
+            //If not the right amount of elements on a line, throw Exception
+            if (elementsCounter!=lineSizeFMap) throw new FileFormatException(mapFile);
+
+            elementsCounter=0;
+            firstLine=false;
             //Reading a new line and counting
             line=br.readLine();
-            lineCt++;
+            lineAmountFMap++;
         }
 
-        //All squares have been set, end of the constructor.
-
+        //All squares have been set, checking the size and end of the constructor.
+        if (lineAmountBGMap!=lineAmountFMap || lineSizeBGMap!=lineSizeFMap) throw new FileFormatException(mapFile);
     }
 
 

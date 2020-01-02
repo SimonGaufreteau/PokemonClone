@@ -1,5 +1,7 @@
 package worldMap;
 
+import exceptions.FileFormatException;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
@@ -14,7 +16,7 @@ public class Region {
     Name : Route 1
     MapFile : MapfileRoute1.txt
      */
-    public Region(String regionFile) throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public Region(String regionFile) throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, FileFormatException {
         File file = new File(regionFile);
 
         BufferedReader br = new BufferedReader(new FileReader(file));

@@ -1,5 +1,7 @@
 package worldMap;
 
+import exceptions.FileFormatException;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class World {
     Note : All Regions may not be of the same size.
      Each time the player crosses the limit of one border, the next Region will be loaded.
      */
-    public World(String fileName) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public World(String fileName) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, FileFormatException {
 
         File file = new File(fileName);
 
