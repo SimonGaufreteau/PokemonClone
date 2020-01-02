@@ -1,0 +1,52 @@
+ID : 183
+Name : "Marill"
+
+BASE STATS : 
+HP : 70
+ATK : 20
+DEF : 50
+SPATK : 20
+SPDEF : 50
+SPD : 40
+
+EV :
+HP : 2
+ATK : 0
+DEF : 0
+SPATK : 0
+STPDEF : 0
+SPD : 0
+
+Types : Water / Void
+Desc : "Marill, a Water-type Pokemon"
+Weight : 0.4
+Height : 8.5
+CatchRate : 255
+BaseExp : 58
+LVLRate : Fast
+Gender Ratio : 50/50
+Abilities : "Trick Fat" , "Huge Power"
+Evolution ID : 184
+
+LVL-UP LEARNSET :
+{1 : Tackle
+1 : Water Gun
+2 : Tail Whip Normal
+5 : Water Sport	Water
+7 : Bubble Water
+10 : Defense Curl
+10 : Rollout
+13 : Bubble
+16 : Helping
+20 : Aqua Tail
+23 : Play Rough
+28 : Aqua Ring
+31 : Rain Dance
+37 : Double-Edge
+40 : Superpower
+47 : Hydro Pump}
+
+HM-TM LEARNSET :
+{TM01 , TM06 , TM07 , TM86}
+
+
