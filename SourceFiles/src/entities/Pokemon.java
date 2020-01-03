@@ -5,6 +5,7 @@ import items.Item;
 import pokemonGameUtiles.Ability;
 import pokemonGameUtiles.Move;
 import pokemonGameUtiles.Pokedex;
+import pokemonGameUtiles.Stats;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class Pokemon extends PokemonAbstract {
+    private Stats IV;
     private int level;
     private String nature;
     private String gender;
@@ -35,7 +37,9 @@ public class Pokemon extends PokemonAbstract {
         //Taking moves from the most recent ones in the learning list
         Map<Integer, ArrayList<Move>> lvlLearnset = pokemonBase.getLvlLearnset();
         int lvl = this.level;
-
+        moves = new Move[4];
+        // ---------- TO BE CODED : ADDING MOVES ACCORDING TO THE POKEMON'S LEVEL ----------
+        /*
         while(moves.length<4 && lvl>0){
             ArrayList<Move> moveList = lvlLearnset.get(lvl);
 
@@ -53,7 +57,7 @@ public class Pokemon extends PokemonAbstract {
             }
             //If no move at this level, decrease the level by one
             else lvl--;
-        }
+        }*/
     }
 
     public Pokemon(int id, int level, Move[] moves, Pokedex pokedex) throws PokemonNotFoundException {
@@ -66,10 +70,11 @@ public class Pokemon extends PokemonAbstract {
     public Pokemon(int id, int level, Move[] moves, Item item, Pokedex pokedex) throws PokemonNotFoundException {
         //Setting default values
         pokemonBase = pokedex.getPokemonByID(id);
+        pokedexID = pokemonBase.getPokedexID();
         name=pokemonBase.getName();
         types=pokemonBase.getTypes();
         EV=pokemonBase.getEV();
-        IV=pokemonBase.getIV();
+        IV = null;
         description=pokemonBase.getDescription();
         weight=pokemonBase.getWeight();
         height=pokemonBase.getHeight();
@@ -77,6 +82,7 @@ public class Pokemon extends PokemonAbstract {
         baseExp=pokemonBase.getBaseExp();
         lvlRate=pokemonBase.getLvlRate();
         evolutionID=pokemonBase.getEvolutionID();
+        stats = pokemonBase.getStats();
 
         holdItem=item;
         this.moves=moves;
@@ -87,7 +93,7 @@ public class Pokemon extends PokemonAbstract {
 
         //A gender is randomly generated according to the gender (male) rate in the base
         double value = r.nextDouble();
-        if ((int)value*100<pokemonBase.getMaleRate()) gender="Male";
+        if ((int)(value*100)<pokemonBase.getMaleRate()) gender="Male";
         else gender = "Female";
 
         //An ability is randomly picked (if there is more than one)
@@ -109,29 +115,22 @@ public class Pokemon extends PokemonAbstract {
         return isKnown;
     }
 
+    public Stats getIV() {
+        return IV;
+    }
+
     @Override
     public String toString() {
-        return "Pokemon{" +
-                "level=" + level +
-                ", nature='" + nature + '\'' +
-                ", gender='" + gender + '\'' +
-                ", ability=" + ability +
-                ", holdItem=" + holdItem +
-                ", moves=" + Arrays.toString(moves) +
-                ", pokemonBase=" + pokemonBase +
-                ", pokedexID=" + pokedexID +
-                ", types=" + Arrays.toString(types) +
-                ", name='" + name + '\'' +
-                ", EV=" + EV +
-                ", IV=" + IV +
-                ", stats=" + stats +
-                ", description='" + description + '\'' +
-                ", weight=" + weight +
-                ", height=" + height +
-                ", catchRate=" + catchRate +
-                ", baseExp=" + baseExp +
-                ", lvlRate='" + lvlRate + '\'' +
-                ", evolutionID=" + evolutionID +
+        String superString =super.toString().replaceAll("[}]$", "").replace("PokemonAbstract{","Pokemon{");
+        String s="IV=" + IV +'\n' +
+                "level=" + level +'\n' +
+                "nature=" + nature + '\n' +
+                "gender=" + gender + '\n' +
+                "ability=" + ability +'\n' +
+                "holdItem=" + holdItem +'\n' +
+                "moves=" + Arrays.toString(moves) +'\n' +
+                //"pokemonBase=" + pokemonBase +'\n' +
                 '}';
+        return superString+s;
     }
 }

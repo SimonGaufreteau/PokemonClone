@@ -1,7 +1,7 @@
 ID : 183
 Name : "Marill"
 
-BASE STATS : 
+BASE STATS :
 HP : 70
 ATK : 20
 DEF : 50
@@ -26,21 +26,18 @@ BaseExp : 58
 LVLRate : Fast
 Gender Ratio : 50/50
 Abilities : "Trick Fat" , "Huge Power"
-Evolution ID : 184
+Evolution ID : 0
 
 LVL-UP LEARNSET :
 {1 : Tackle
 1 : Water Gun
-2 : Tail Whip Normal
-5 : Water Sport	Water
-7 : Bubble Water
+2 : Tail Whip
+5 : Water Sport
+7 : Bubble
 10 : Defense Curl
 10 : Rollout
 13 : Bubble
-16 : Helping
-20 : Aqua Tail
-23 : Play Rough
-28 : Aqua Ring
+16 : Helping Hand
 31 : Rain Dance
 37 : Double-Edge
 40 : Superpower

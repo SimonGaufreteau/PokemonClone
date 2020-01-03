@@ -2,6 +2,8 @@ package entities;
 
 import pokemonGameUtiles.Stats;
 
+import java.util.Arrays;
+
 public abstract class PokemonAbstract {
     /*
     Defines a non-instantiated Pokemon. The base of the Pokemon is contained in the PokemonBase class,
@@ -11,7 +13,6 @@ public abstract class PokemonAbstract {
     protected String[] types =new String[2]; //2 types max, 1 type min (defined in constructor)
     protected String name;
     protected Stats EV;
-    protected Stats IV;
     protected Stats stats;
     protected String description;
     protected float weight;
@@ -35,10 +36,6 @@ public abstract class PokemonAbstract {
 
     public Stats getEV() {
         return EV;
-    }
-
-    public Stats getIV() {
-        return IV;
     }
 
     public Stats getStats() {
@@ -71,5 +68,23 @@ public abstract class PokemonAbstract {
 
     public int getEvolutionID() {
         return evolutionID;
+    }
+
+    @Override
+    public String toString() {
+        return "PokemonAbstract{" + '\n' +
+                "pokedexID=" + pokedexID + '\n' +
+                "types=" + Arrays.toString(types) + '\n' +
+                "name=" + name + '\n' +
+                "EV=" + EV + '\n' +
+                "stats=" + stats + '\n' +
+                "description=" + description + '\n' +
+                "weight=" + weight + '\n' +
+                "height=" + height + '\n' +
+                "catchRate=" + catchRate + '\n' +
+                "baseExp=" + baseExp + '\n' +
+                "lvlRate=" + lvlRate + '\n' +
+                "evolutionID=" + evolutionID + '\n' +
+                '}';
     }
 }
