@@ -1,0 +1,22 @@
+BackgroundMapId :
+001 = {SpecialObject : false , Name : Ground1 , DisplayType : String , Display : "G"}
+002 = {SpecialObject : false , Name : Road1 , DisplayType : String , Display : "R1"}
+003 = {SpecialObject : false , Name : Road2 , DisplayType : String , Display : "R2"}
+004 = {SpecialObject : true , Class : worldMap.objects.Water , Name : Water1 , DisplayType : String , Display : "~"}
+
+FrontMapId :
+001 = {SpecialObject : true , Class : worldMap.objects.SmallGrass , Name : SmallGrass1 , DisplayType : String , Display : "G"}
+002 = {SpecialObject : false , Name : Fence1 , DisplayType : String , Display : "F1"}
+
+
+BackgroundMap :
+004 004 003 001
+004 004 002 001
+001 002 002 001
+002 002 001 001
+
+FrontMap :
+000 000 000 001
+000 000 000 001
+000 000 000 001
+000 002 002 001

@@ -1,0 +1,3 @@
+Type : Route
+Name : Route 1
+MapFile : MapfileRoute1.txt
