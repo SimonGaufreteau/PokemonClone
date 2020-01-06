@@ -29,7 +29,7 @@ public class Main {
             Pokedex pokedex = new Pokedex("Pokemons",abilityDict,moveDict);
             //System.out.println(pokedex);
 
-            Pokemon marill = new Pokemon(183,pokedex);
+            Pokemon marill = new Pokemon(183,3,pokedex);
             System.out.println(marill);
         }
         catch (Exception e){

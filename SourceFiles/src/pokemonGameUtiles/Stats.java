@@ -17,6 +17,10 @@ public class Stats {
         this.spd = spd;
     }
 
+    public Stats() {
+        this(0,0,0,0,0,0);
+    }
+
     @Override
     public String toString() {
         return "Stats{" +
@@ -51,5 +55,29 @@ public class Stats {
 
     public void setSpd(int spd) {
         this.spd = spd;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getAtk() {
+        return atk;
+    }
+
+    public int getDef() {
+        return def;
+    }
+
+    public int getSpAtk() {
+        return spAtk;
+    }
+
+    public int getSpDef() {
+        return spDef;
+    }
+
+    public int getSpd() {
+        return spd;
     }
 }
