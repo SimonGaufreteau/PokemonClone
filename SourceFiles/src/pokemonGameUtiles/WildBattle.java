@@ -87,4 +87,23 @@ public class WildBattle extends Battle {
         }
         return playTurn(trainerPokemon.getMoves()[intMove], targets);
     }
+
+    /*
+    Swaps a Pokemon with the actual one if possible.
+     */
+    public String changePokemon(Pokemon target) {
+        if (canBeSwapped(trainerPokemon)) {
+            trainerPokemon = target;
+            return "Come back " + trainerPokemon.getName() + ". " + target.getName() + " go !";
+        }
+        return trainerPokemon.getName() + " cannot escape !";
+    }
+
+    /*
+    Checks if the pokemon can be swapped or not
+     */
+    private boolean canBeSwapped(Pokemon p) {
+        //TODO : check if the Pokemon can be swapped or not --> Check effects (not implemented yet)
+        return true;
+    }
 }
