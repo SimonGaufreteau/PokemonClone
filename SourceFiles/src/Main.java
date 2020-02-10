@@ -19,7 +19,7 @@ public class Main {
             //System.out.println(abilityDict);
 
             MoveDict moveDict = new MoveDict("Moves\\Movelist.txt");
-            System.out.println(moveDict);
+            //System.out.println(moveDict);
 
             Pokedex pokedex = new Pokedex("Pokemons", abilityDict, moveDict);
             //System.out.println(pokedex);
@@ -29,6 +29,8 @@ public class Main {
                 marill = new Pokemon(183, i, pokedex);
             }
             System.out.println(marill);*/
+
+
         }
         catch (Exception e){
             e.printStackTrace();

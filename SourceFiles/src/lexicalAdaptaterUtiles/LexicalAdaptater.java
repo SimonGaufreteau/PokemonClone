@@ -24,7 +24,13 @@ import pokemonGameUtiles.Move;
 --> Future adaptations :
 A package than can create an Object according to a regex or some samples.
  */
-public class LexicalAdaptater {
+public final class LexicalAdaptater {
+    //Prevent possible instances to appear in the code --> only a static-utility Class
+    private LexicalAdaptater() {
+    }
+
+
+
 
     /*
     Returns the correct instance of a Move (Attack, Debuff, Buff, etc..) according to a String (mostly taken from a pre-defined file).
@@ -34,7 +40,7 @@ public class LexicalAdaptater {
     (See class' pre-definition for examples of lines)
      */
 
-    public Move generateMoveFromString(String moveLine) throws Exception {
+    public static Move generateMoveFromString(String moveLine) throws Exception {
         int id, PP, power, accuracy;
         String name, type, category, contest, description;
         String[] st;
@@ -85,12 +91,12 @@ public class LexicalAdaptater {
     }
 
     //TODO : Generate the correct instance from a description
-    private Class<Move> getClassFromDescription(String description) {
+    private static Class<Move> getClassFromDescription(String description) {
         return Move.class;
     }
 
     //TODO : Generate an Item from a String
-    public Item generateItemFromString(String itemLine) {
+    public static Item generateItemFromString(String itemLine) {
         return null;
     }
 
