@@ -1,11 +1,7 @@
 import entities.Pokemon;
 import pokemonGameUtiles.AbilityDict;
-import pokemonGameUtiles.Move;
 import pokemonGameUtiles.MoveDict;
 import pokemonGameUtiles.Pokedex;
-import worldMap.*;
-
-import java.io.File;
 
 public class Main {
     public static void main (String[] args){
@@ -26,10 +22,13 @@ public class Main {
             MoveDict moveDict = new MoveDict("Moves\\Movelist.txt");
             //System.out.println(moveDict.getByID(18));
 
-            Pokedex pokedex = new Pokedex("Pokemons",abilityDict,moveDict);
+            Pokedex pokedex = new Pokedex("Pokemons", abilityDict, moveDict);
             //System.out.println(pokedex);
 
-            Pokemon marill = new Pokemon(183,3,pokedex);
+            Pokemon marill = new Pokemon(183, 20, pokedex);
+            for (int i = 0; i <= 99; i++) {
+                marill = new Pokemon(183, i, pokedex);
+            }
             System.out.println(marill);
         }
         catch (Exception e){

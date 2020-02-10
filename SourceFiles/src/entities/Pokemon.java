@@ -49,10 +49,11 @@ public class Pokemon extends PokemonAbstract {
             if (moveList!=null){
                 boolean moveLearnt=false;
                 for (Move m:moveList) {
-                    if(!isMoveKnown(m)) {
-                        moves[countMoves]=m;
+                    if (countMoves >= 4) continue;
+                    if (!isMoveKnown(m)) {
+                        moves[countMoves] = m;
                         countMoves++;
-                        moveLearnt=true;
+                        moveLearnt = true;
                     }
                 }
                 //If all moves were learnt at this level (none where learnt at this iteration), decrease the level by one to check for other moves
@@ -96,7 +97,7 @@ public class Pokemon extends PokemonAbstract {
 
         //A nature is randomly generated
         Random r = new Random();
-        nature = natures[r.nextInt(25)];
+        nature = natures[r.nextInt(natures.length)];
 
         //A gender is randomly generated according to the gender (male) rate in the base
         double value = r.nextDouble();
@@ -143,9 +144,9 @@ public class Pokemon extends PokemonAbstract {
         int preCalculation = (((2*statBase+statIV+statEV/4)*level)/100) +5;
         double natureCoef = 1.;
 
-        if (effectedStats!=null){
+        if (effectedStats != null && effectedStats.length == 2) {
             if (statCalc.equals(effectedStats[0])) natureCoef = 1.1;
-            else if (statCalc.equals(effectedStats[1])) natureCoef=0.9;
+            else if (statCalc.equals(effectedStats[1])) natureCoef = 0.9;
         }
         return (int)(preCalculation*natureCoef);
     }
@@ -161,21 +162,26 @@ public class Pokemon extends PokemonAbstract {
         return IV;
     }
 
-    public Stats getEV(){
+    public Stats getEV() {
         return EV;
     }
+
+    public Move[] getMoves() {
+        return moves;
+    }
+
     @Override
     public String toString() {
-        String superString =super.toString().replaceAll("[}]$", "").replace("PokemonAbstract{","Pokemon{");
-        String s="IV=" + IV +'\n' +
-                "level=" + level +'\n' +
+        String superString = super.toString().replaceAll("[}]$", "").replace("PokemonAbstract{", "Pokemon{");
+        String s = "IV=" + IV + '\n' +
+                "level=" + level + '\n' +
                 "nature=" + nature + '\n' +
                 "gender=" + gender + '\n' +
-                "ability=" + ability +'\n' +
-                "holdItem=" + holdItem +'\n' +
-                "moves=" + Arrays.toString(moves) +'\n' +
+                "ability=" + ability + '\n' +
+                "holdItem=" + holdItem + '\n' +
+                "moves=" + Arrays.toString(moves) + '\n' +
                 //"pokemonBase=" + pokemonBase +'\n' +
                 '}';
-        return superString+s;
+        return superString + s;
     }
 }
