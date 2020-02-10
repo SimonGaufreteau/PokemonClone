@@ -99,11 +99,30 @@ public class WildBattle extends Battle {
         return trainerPokemon.getName() + " cannot escape !";
     }
 
+    public String changePokemon(int index) {
+        return changePokemon(firstTrainer.getPokemons().get(index));
+    }
+
     /*
     Checks if the pokemon can be swapped or not
      */
     private boolean canBeSwapped(Pokemon p) {
         //TODO : check if the Pokemon can be swapped or not --> Check effects (not implemented yet)
+        return true;
+    }
+
+
+    public String run() {
+        if (canRun(trainerPokemon))
+            return "You ran away ! ";
+        return trainerPokemon.getName() + " cannot run from this battle !";
+        /*TODO : return the reason of why the Pokemon can't escape. It will mostly (?) be due to a Move from the other Pokemon
+           or its ability.
+        * */
+    }
+
+    private boolean canRun(Pokemon p) {
+        //TODO : check if the Pokemon can escape or not --> Check effects (not implemented yet)
         return true;
     }
 }
