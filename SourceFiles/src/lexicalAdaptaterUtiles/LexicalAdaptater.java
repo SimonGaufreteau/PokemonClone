@@ -1,15 +1,15 @@
 package lexicalAdaptaterUtiles;
 
-import items.Item;
+import entities.Pokemon;
 import pokemonGameUtiles.Move;
 
 /*
---> Purpose of this class : create an adapter that will be able to convert a String to the corresponding object.
+--> Purpose of this class : create an adapter that will be able to manipulate Strings in different contexts.
+
 
 --> Why do we need this here ?
     - Pack up everything we need at the same place to simplify the code
     - Easier implementation and modification
-    -
 
 --> Potential Objects adapted (in this project) :
     - TODO : Moves
@@ -29,13 +29,10 @@ public final class LexicalAdaptater {
     private LexicalAdaptater() {
     }
 
-
-
-
     /*
-    Returns the correct instance of a Move (Attack, Debuff, Buff, etc..) according to a String (mostly taken from a pre-defined file).
+    Returns the instance of a Move (Attack, Debuff, Buff, etc..) according to a String (mostly taken from a pre-defined file).
     Input : String moveLine --> a String describing the move
-    Output : a Move (can be of any sub-classes of Move)
+    Output : a Move
 
     (See class' pre-definition for examples of lines)
      */
@@ -83,22 +80,40 @@ public final class LexicalAdaptater {
         } else throw new Exception("Error. Empty String given as a Move.");
 
 
-        //We now have everything we need to build a Move. We now use the "" method to generate the correct instance according to the move description.
-
-
         //While we are constructing the class, this return statement will be used (same as in MoveDict Class)
         return new Move(id, name, type, category, contest, PP, power, accuracy, description);
     }
 
-    //TODO : Generate the correct instance from a description
-    private static Class<Move> getClassFromDescription(String description) {
-        return Move.class;
+
+    public static String runMove(Move m, Pokemon attacker, Pokemon[] targets) {
+
+        String[] split = m.getDescription().split(" ");
+
+
+
+
+
+        /*
+        //If the move is a buffer/debuffer move, apply the effect.
+        if (m instanceof BufferMove) {
+            returnString.append(((BufferMove) m).buff(attacker, targets, m)).append("\n");
+        } else if (m instanceof DebufferMove) {
+            returnString.append(((DebufferMove) m).debuff(attacker, targets, m)).append("\n");
+        }
+
+        //If the move is an attack move, use the attack
+        //NOTE : A move can be both a buffer/debuffer and an attack move
+        if (m instanceof AttackMove) {
+            returnString.append(((AttackMove) m).attack(attacker, targets, m)).append("\n");
+        }*/
+
+        return "";
     }
 
     //TODO : Generate an Item from a String
-    public static Item generateItemFromString(String itemLine) {
+    /*public static Item generateItemFromString(String itemLine) {
         return null;
-    }
+    }*/
 
     //TODO : Generate an Effect (not implemented yet) from a String
     /*public Effect generateEffectFromString(String effectLine){

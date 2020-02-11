@@ -5,6 +5,7 @@ import entities.Trainer;
 import exceptions.PokemonNotFoundException;
 import items.Item;
 import items.Usable;
+import lexicalAdaptaterUtiles.LexicalAdaptater;
 
 import java.util.Random;
 
@@ -61,21 +62,7 @@ public class WildBattle extends Battle {
      */
     public String playTurn(Move m, Pokemon[] targets) {
         //if (m.getPP()==0) return "This move can't be used !";
-        StringBuilder returnString = new StringBuilder();
-        //If the move is a buffer/debuffer move, apply the effect.
-        if (m instanceof BufferMove) {
-            returnString.append(((BufferMove) m).buff(trainerPokemon, targets, m)).append("\n");
-        } else if (m instanceof DebufferMove) {
-            returnString.append(((DebufferMove) m).debuff(trainerPokemon, targets, m)).append("\n");
-        }
-
-        //If the move is an attack move, use the attack
-        //NOTE : A move can be both a buffer/debuffer and an attack move
-        if (m instanceof AttackMove) {
-            returnString.append(((AttackMove) m).attack(trainerPokemon, targets, m)).append("\n");
-        }
-
-        return returnString.toString();
+        return LexicalAdaptater.runMove(m, trainerPokemon, targets);
     }
 
 
