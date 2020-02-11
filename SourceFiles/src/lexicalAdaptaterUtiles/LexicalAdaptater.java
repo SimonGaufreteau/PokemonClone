@@ -1,7 +1,11 @@
 package lexicalAdaptaterUtiles;
 
 import entities.Pokemon;
+import exceptions.WordNotFoundException;
+import exceptions.WrongDescriptionException;
 import pokemonGameUtiles.Move;
+import pokemonGameUtiles.Status;
+import worldMap.World;
 
 /*
 --> Purpose of this class : create an adapter that will be able to manipulate Strings in different contexts.
@@ -85,30 +89,133 @@ public final class LexicalAdaptater {
     }
 
 
-    public static String runMove(Move m, Pokemon attacker, Pokemon[] targets) {
-
-        String[] split = m.getDescription().split(" ");
-
-
-
-
-
-        /*
-        //If the move is a buffer/debuffer move, apply the effect.
-        if (m instanceof BufferMove) {
-            returnString.append(((BufferMove) m).buff(attacker, targets, m)).append("\n");
-        } else if (m instanceof DebufferMove) {
-            returnString.append(((DebufferMove) m).debuff(attacker, targets, m)).append("\n");
+    public static String runMove(Move m, Pokemon attacker, Pokemon[] targets) throws WrongDescriptionException, WordNotFoundException {
+        //Checking separately the empty String
+        if (m.getDescription().length()==0){
+            return attack(m,attacker,targets);
         }
+        return runMoveRecursive(m,attacker,targets,m.getDescription());
+    }
 
-        //If the move is an attack move, use the attack
-        //NOTE : A move can be both a buffer/debuffer and an attack move
-        if (m instanceof AttackMove) {
-            returnString.append(((AttackMove) m).attack(attacker, targets, m)).append("\n");
-        }*/
+    //Recursively updates the game with the actual description of the move (the description gets shortened every time
+    private static String runMoveRecursive(Move m,Pokemon attacker,Pokemon[] targets,String actualDescription) throws WrongDescriptionException, WordNotFoundException {
+        if (m.getDescription().length()==0) return "";
+        else {
+            //Return String containing the result of the attack
+            StringBuilder s = new StringBuilder();
+
+            String desc = m.getDescription();
+            String[] split = desc.split(" ");
+            if (split.length!=0){
+                switch (split[0].toLowerCase()){
+                    case "always" :
+                        /* Semantic : Always inflicts X HP
+                         * Example : Always inflicts 10 HP
+                         * Required : length>=4,split[2] must be an int
+                        */
+                        if (split.length<4) throw new WrongDescriptionException(desc);
+                        if (split[1].toLowerCase().compareTo("inflicts")!=0) throw new WordNotFoundException(split[1],desc);
+                        if (split[3].toLowerCase().compareTo("hp")!=0) throw new WordNotFoundException(split[3],desc);
+                        try{
+                            int dmg = Integer.parseInt(split[2]);
+                            for (Pokemon p:targets) {
+                                p.updateHps(dmg);
+                            }
+                        }
+                        catch (NumberFormatException e){
+                            throw new WrongDescriptionException(desc);
+                        }
+
+                        break;
+                    case "charges" :
+                        /* Semantic : Charges on the first turn
+                         * Required : length>=5
+                         */
+                        //If the attacker is waiting, it means that we've already been in this condition --> deal the dmg to the targets
+                        if (split.length<5) throw new WrongDescriptionException(desc);
+                        if (attacker.isWaiting()){
+                            s.append(attack(m,attacker,targets));
+                        }
+                        attacker.setWaiting();
+                        break;
+                    case "confuses" :
+                        /* Semantic : Confuses {target}
+                         * Example : Confuses opponent
+                         * Required : length>=2
+                         * Note : only 'opponent' is valid at the moment
+                         */
+                        s.append(confuse(targets));
+                        break;
+                    case "damage" :
+                        /* Semantic : Damage occurs X turns later
+                         * Example : Damage occurs 2 turns later
+                         * Required : length>=5,split[2] int
+                         * Note : Only one of these move can be up for one pokemon. TODO : decrease the number of turn of this move by one each turn
+                         */
+                        if (split.length<5) throw new WrongDescriptionException(desc);
+                        //Checking if the attacker doesn't already have a move waiting
+                        if (!attacker.getWaitingToBeDealt().isEmpty()) s.append("Impossible, a move is already prepared !");
+                        else {
+                            try{
+                                int turns = Integer.parseInt(split[2]);
+                                attacker.setWaitingToBeDealt(m,turns);
+                                s.append(String.format("%s prepared an attack !",attacker.getName()));
+                            }
+                            catch (NumberFormatException e) {
+                                throw new WrongDescriptionException(desc);
+                            }
+                        }
+                        break;
+                    case "doubles" :
+                        /* Semantic : Doubles in power each turn for X turns
+                         * Example : Doubles in power each turn for 5 turns
+                         * Required : length>=8,split[6] int
+                         */
+                        //If the pokemon is already in a permanent state
+                        if (split.length<8) throw new WrongDescriptionException(desc);
+                        if (!attacker.getPermanentAttack().isEmpty()){
+                            s.append(attack(m,attacker,targets));
+                            attacker.decreasePermanentAttack(m);
+                        }
+                        else {
+                            try{
+                                int turns = Integer.parseInt(split[2]);
+                                attacker.setPermanentAttack(m,turns);
+                                s.append(String.format("%s is preparing an attack !", attacker.getName()));
+                                s.append(attack(m,attacker,targets));
+                            }
+                            catch (NumberFormatException e){
+                                throw new WrongDescriptionException(desc);
+                            }
+                        }
+                        break;
+                    default:
+                        throw new WrongDescriptionException(desc);
+                }
+            }
+        }
 
         return "";
     }
+
+    //TODO: calculate the damage to be dealt to the targets by the attacker
+    //Calculates the damage to be deal to the target, updates the Pokemons and return the effectiveness.
+    private static String attack(Move m,Pokemon attacker,Pokemon[] targets){
+        return "";
+    }
+
+    //Confuses the targets
+    //Note : We assume that all Pokemons can be confused, other
+    private static String confuse(Pokemon[] targets){
+        StringBuilder s = new StringBuilder();
+        for (Pokemon p :targets) {
+            p.addOtherStatus(new Status("Confusion"));
+            s.append(String.format("%s is now confused !",p.getName()));
+        }
+        return s.toString();
+    }
+
+
 
     //TODO : Generate an Item from a String
     /*public static Item generateItemFromString(String itemLine) {
