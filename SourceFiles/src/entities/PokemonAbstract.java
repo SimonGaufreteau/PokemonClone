@@ -12,7 +12,7 @@ public abstract class PokemonAbstract {
     protected int pokedexID;
     protected String[] types =new String[2]; //2 types max, 1 type min (defined in constructor)
     protected String name;
-    protected Stats EV;
+    protected Stats EVGiven;
     protected Stats stats;
     protected String description;
     protected float weight;
@@ -34,8 +34,8 @@ public abstract class PokemonAbstract {
         return name;
     }
 
-    public Stats getEV() {
-        return EV;
+    public Stats getEVGiven() {
+        return EVGiven;
     }
 
     public Stats getStats() {
@@ -76,7 +76,7 @@ public abstract class PokemonAbstract {
                 "pokedexID=" + pokedexID + '\n' +
                 "types=" + Arrays.toString(types) + '\n' +
                 "name=" + name + '\n' +
-                "EV=" + EV + '\n' +
+                "EV=" + EVGiven + '\n' +
                 "stats=" + stats + '\n' +
                 "description=" + description + '\n' +
                 "weight=" + weight + '\n' +

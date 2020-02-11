@@ -1,8 +1,9 @@
 package worldMap;
 
-import worldMap.objects.*;
+import worldMap.objects.BackgroundObject;
+import worldMap.objects.FrontObject;
+import worldMap.objects.SolidObject;
 
-import java.lang.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -22,8 +23,9 @@ public class Square {
         else { //Special case
             String s = mapBG.get("Class");
             Class<?> c = Class.forName(s);
-            //Creating an object from the class given
-            this.backgroundObject = (BackgroundObject) c.getConstructor(String.class,String.class).newInstance(mapBG.get("Name"),mapBG.get("Display"));
+            //Creating an object from the class given (Important note : any BGObject or FObject uses a String,String constructor)
+            //TODO : Verify if the class really is the one we're looking for (maybe change the wildcard <?> to BackgroundObject class ?
+            this.backgroundObject = (BackgroundObject) c.getConstructor(String.class, String.class).newInstance(mapBG.get("Name"), mapBG.get("Display"));
         }
 
     }

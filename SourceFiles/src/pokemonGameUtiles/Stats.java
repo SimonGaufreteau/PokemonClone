@@ -1,6 +1,6 @@
 package pokemonGameUtiles;
 
-public class Stats {
+public class Stats implements  Cloneable{
     private int hp;
     private int atk;
     private int def;
@@ -15,6 +15,10 @@ public class Stats {
         this.spAtk = spAtk;
         this.spDef = spDef;
         this.spd = spd;
+    }
+
+    public Stats() {
+        this(0,0,0,0,0,0);
     }
 
     @Override
@@ -51,5 +55,34 @@ public class Stats {
 
     public void setSpd(int spd) {
         this.spd = spd;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getAtk() {
+        return atk;
+    }
+
+    public int getDef() {
+        return def;
+    }
+
+    public int getSpAtk() {
+        return spAtk;
+    }
+
+    public int getSpDef() {
+        return spDef;
+    }
+
+    public int getSpd() {
+        return spd;
+    }
+
+    @Override
+    public Stats clone() throws CloneNotSupportedException {
+        return (Stats) super.clone();
     }
 }

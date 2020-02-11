@@ -1,7 +1,5 @@
 package pokemonGameUtiles;
 
-import exceptions.MoveCreationException;
-
 public class Move implements Comparable<Move>{
     private int id;
     private String name;
@@ -34,8 +32,32 @@ public class Move implements Comparable<Move>{
         return name;
     }
 
-    public int getId(){
+    public int getId() {
         return this.id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public int getPP() {
+        return PP;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

@@ -48,7 +48,7 @@ public class PokemonBase  extends PokemonAbstract {
                        stats = readStats(br, fileName);
                        break;
                    case "ev :":
-                       EV = readStats(br, fileName);
+                       EVGiven = readStats(br, fileName);
                        break;
                    case "types":
                        if (st[1] == null) throw new FileFormatException(fileName);
@@ -121,7 +121,7 @@ public class PokemonBase  extends PokemonAbstract {
            }
             line=br.readLine();
         }//End of the file's reading, checking if every attributes has been initialized. If not, throw Exception
-        if (types==null || name==null || EV==null || stats==null || description==null || weight==0.0f || height==0.0f || catchRate==0 || baseExp==0 || lvlRate==null){
+        if (types==null || name==null || EVGiven ==null || stats==null || description==null || weight==0.0f || height==0.0f || catchRate==0 || baseExp==0 || lvlRate==null){
             throw new FileFormatException(fileName);
         }
 
