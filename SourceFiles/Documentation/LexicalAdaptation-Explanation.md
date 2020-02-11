@@ -44,7 +44,7 @@ E) Sharply (D / C)
 F) May (C / D)
 
 
----------- KeyWords : ----------
+#### 1.2.1 - KeyWords : 
 
 (Numbers) Always / Charges / Confuses / Damage / Doubles / Halves / High / Hits / Ignores / Inflicts
 / Makes (Not implemented yet) / One-Hit-KO / Traps
@@ -54,5 +54,5 @@ F) May (C / D)
 (Others) May / Sharply
 
 
----------- Implementation ----------
+#### 1.2.1 - Implementation : 
 Only the keywords will be implemented for now.
