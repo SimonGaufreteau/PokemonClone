@@ -2,17 +2,13 @@ package entities;
 
 import exceptions.PokemonNotFoundException;
 import items.Item;
-import pokemonGameUtiles.Ability;
-import pokemonGameUtiles.Move;
-import pokemonGameUtiles.Pokedex;
-import pokemonGameUtiles.Stats;
+import pokemonGameUtiles.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Pokemon extends PokemonAbstract {
+    
+    private Stats actualStats;
     private Stats IV;
     private Stats EV;
     private int level;
@@ -26,8 +22,15 @@ public class Pokemon extends PokemonAbstract {
     //Representing the effected stats (for each nature) : + / -
     private static final String[][] effectedStats = {{},{"atk","def"},{"atk","spd"},{"atk","spatk"},{"atk","spdef"},{"def","spd"},{},{"def","spd"},{"def","spatk"},{"def","spdef"},{"spd","atk"},{"spd","def"},{},{"spd","spatk"},{"spd","spdef"} ,{"spatk","atk"},{"spatk","def"},{"spatk","spd"},{},{"spatk","spdef"},{"spdef","atk"},{"spdef","def"},{"spdef","spd"},{"spdef","spatk"},{}};
 
+    //Useful battle attributes
+    private boolean isWaiting;
+    private boolean isInPermanentAttack;
+    private Status mainStatus;
+    private ArrayList<Status> otherStatus;
+    private Map<Move,Integer> waitingToBeDealt;
+    private Map<Move,Integer> permanentAttack;
 
-    public Pokemon(int id, Pokedex pokedex) throws PokemonNotFoundException {
+    public Pokemon(int id, Pokedex pokedex) throws PokemonNotFoundException, CloneNotSupportedException {
         this(id,1 + (new Random()).nextInt(101),pokedex);
 
     }
@@ -35,7 +38,7 @@ public class Pokemon extends PokemonAbstract {
     /*
     Gets moves to build the Pokemon, starts with the moves at the Pokemon's level and decreases until level 1
      */
-    public Pokemon(int id, int level, Pokedex pokedex) throws PokemonNotFoundException {
+    public Pokemon(int id, int level, Pokedex pokedex) throws PokemonNotFoundException, CloneNotSupportedException {
         this(id,level,null,pokedex);
         //Taking moves from the most recent ones in the learning list
         Map<Integer, ArrayList<Move>> lvlLearnset = pokemonBase.getLvlLearnset();
@@ -64,14 +67,15 @@ public class Pokemon extends PokemonAbstract {
         }
     }
 
-    public Pokemon(int id, int level, Move[] moves, Pokedex pokedex) throws PokemonNotFoundException {
+    public Pokemon(int id, int level, Move[] moves, Pokedex pokedex) throws PokemonNotFoundException, CloneNotSupportedException {
         this(id,level,moves,null,pokedex);
     }
 
+
     /*
-    Creates a Pokemon from a PokemonBase (see class) in the Pokedex with a level, moves and item given
-     */
-    public Pokemon(int id, int level, Move[] moves, Item item, Pokedex pokedex) throws PokemonNotFoundException {
+            Creates a Pokemon from a PokemonBase (see class) in the Pokedex with a level, moves and item given
+             */
+    public Pokemon(int id, int level, Move[] moves, Item item, Pokedex pokedex) throws PokemonNotFoundException, CloneNotSupportedException {
         //Setting default values
         pokemonBase = pokedex.getPokemonByID(id);
         pokedexID = pokemonBase.getPokedexID();
@@ -88,12 +92,16 @@ public class Pokemon extends PokemonAbstract {
         lvlRate=pokemonBase.getLvlRate();
         evolutionID=pokemonBase.getEvolutionID();
         stats = pokemonBase.getStats();
-
+        mainStatus=new Status();
         holdItem=item;
         this.moves=moves;
         this.level = level;
 
-
+        //Useful to battles
+        isWaiting=false;
+        otherStatus=new ArrayList<>();
+        waitingToBeDealt=new HashMap<>();
+        permanentAttack=new HashMap<>();
 
         //A nature is randomly generated
         Random r = new Random();
@@ -115,8 +123,11 @@ public class Pokemon extends PokemonAbstract {
 
         //Generating the stats following the last link.
         generateStats();
+        actualStats=stats.clone();
 
     }
+
+
 
     private void generateStats(){
         int tempHP = ((2*stats.getHp()+IV.getHp()+EVGiven.getHp()/4)*level)/100 + level+10;
@@ -158,12 +169,82 @@ public class Pokemon extends PokemonAbstract {
         return false;
     }
 
+    public void updateHps(int n){
+        int test =actualStats.getHp()+n;
+        if (test<=0){
+            actualStats.setHp(0);
+        }
+        else actualStats.setHp(Math.min(test, stats.getHp()));
+    }
+
     public Stats getIV() {
         return IV;
     }
 
+    public Status getStatus() {
+        return mainStatus;
+    }
+
+    public Stats getActualStats() {
+        return actualStats;
+    }
+
+    public void setWaiting() {
+        isWaiting = !isWaiting;
+    }
+
+    public boolean isWaiting() {
+        return isWaiting;
+    }
+
     public Stats getEV() {
         return EV;
+    }
+
+    public Status getMainStatus() {
+        return mainStatus;
+    }
+
+    public void setMainStatus(Status mainStatus) {
+        this.mainStatus = mainStatus;
+    }
+
+    public ArrayList<Status> getOtherStatus() {
+        return otherStatus;
+    }
+
+    public Map<Move, Integer> getPermanentAttack() {
+        return permanentAttack;
+    }
+
+    public void setPermanentAttack(Move m,int turns) {
+        if(permanentAttack.isEmpty()){
+            permanentAttack.put(m,turns);
+        }
+    }
+
+    public void decreasePermanentAttack(Move m){
+        if (!permanentAttack.isEmpty()){
+            int n = permanentAttack.get(m);
+            if (n--==0) permanentAttack.clear();
+            else permanentAttack.replace(m, --n);
+        }
+    }
+
+    public Map<Move, Integer> getWaitingToBeDealt() {
+        return waitingToBeDealt;
+    }
+
+    public void setWaitingToBeDealt(Move m, int turns) {
+        if(waitingToBeDealt.isEmpty()){
+            waitingToBeDealt.put(m,turns);
+        }
+    }
+
+
+    public void addOtherStatus(Status s) {
+        if (!otherStatus.contains(s))
+            otherStatus.add(s);
     }
 
     public Move[] getMoves() {
