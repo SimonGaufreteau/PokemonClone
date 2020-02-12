@@ -1,0 +1,2 @@
+Normal/Fire/Water/Grass/Electric/Ice/Fighting/Poison/Ground/Flying/Psychic/Bug/Rock/Ghost/Dragon/Dark/Steel
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
