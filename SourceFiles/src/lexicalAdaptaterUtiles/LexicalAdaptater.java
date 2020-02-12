@@ -4,8 +4,6 @@ import entities.Pokemon;
 import exceptions.WordNotFoundException;
 import exceptions.WrongDescriptionException;
 import pokemonGameUtiles.Move;
-import pokemonGameUtiles.Status;
-import worldMap.World;
 
 /*
 --> Purpose of this class : create an adapter that will be able to manipulate Strings in different contexts.
@@ -92,7 +90,7 @@ public final class LexicalAdaptater {
     public static String runMove(Move m, Pokemon attacker, Pokemon[] targets) throws WrongDescriptionException, WordNotFoundException {
         //Checking separately the empty String
         if (m.getDescription().length()==0){
-            return attack(m,attacker,targets);
+            return BattleAttacks.attack(m, attacker, targets);
         }
         return runMoveRecursive(m,attacker,targets,m.getDescription());
     }
@@ -103,38 +101,38 @@ public final class LexicalAdaptater {
         else {
             //Return String containing the result of the attack
             StringBuilder s = new StringBuilder();
+            String nextDescription;
 
             String desc = m.getDescription();
-            String[] split = desc.split(" ");
-            if (split.length!=0){
-                switch (split[0].toLowerCase()){
-                    case "always" :
+            String[] split = desc.split(" ,.");
+            int nextIndex = Math.min(desc.indexOf(","), desc.indexOf("."));
+            if (split.length != 0) {
+                switch (split[0].toLowerCase()) {
+                    case "always":
                         /* Semantic : Always inflicts X HP
                          * Example : Always inflicts 10 HP
                          * Required : length>=4,split[2] must be an int
-                        */
-                        if (split.length<4) throw new WrongDescriptionException(desc);
-                        if (split[1].toLowerCase().compareTo("inflicts")!=0) throw new WordNotFoundException(split[1],desc);
-                        if (split[3].toLowerCase().compareTo("hp")!=0) throw new WordNotFoundException(split[3],desc);
-                        try{
+                         */
+                        if (split.length < 4) throw new WrongDescriptionException(desc);
+                        if (split[1].toLowerCase().compareTo("inflicts") != 0)
+                            throw new WordNotFoundException(split[1], desc);
+                        if (split[3].toLowerCase().compareTo("hp") != 0)
+                            throw new WordNotFoundException(split[3], desc);
+                        try {
                             int dmg = Integer.parseInt(split[2]);
-                            for (Pokemon p:targets) {
-                                p.updateHps(dmg);
-                            }
-                        }
-                        catch (NumberFormatException e){
+                            s.append(BattleAttacks.dealDirectDamage(dmg, attacker, targets));
+                        } catch (NumberFormatException e) {
                             throw new WrongDescriptionException(desc);
                         }
-
                         break;
-                    case "charges" :
+                    case "charges":
                         /* Semantic : Charges on the first turn
                          * Required : length>=5
                          */
                         //If the attacker is waiting, it means that we've already been in this condition --> deal the dmg to the targets
                         if (split.length<5) throw new WrongDescriptionException(desc);
                         if (attacker.isWaiting()){
-                            s.append(attack(m,attacker,targets));
+                            s.append(BattleAttacks.attack(m, attacker, targets));
                         }
                         attacker.setWaiting();
                         break;
@@ -144,7 +142,7 @@ public final class LexicalAdaptater {
                          * Required : length>=2
                          * Note : only 'opponent' is valid at the moment
                          */
-                        s.append(confuse(targets));
+                        s.append(BattleAttacks.confuse(targets));
                         break;
                     case "damage" :
                         /* Semantic : Damage occurs X turns later
@@ -174,17 +172,16 @@ public final class LexicalAdaptater {
                         //If the pokemon is already in a permanent state
                         if (split.length<8) throw new WrongDescriptionException(desc);
                         if (!attacker.getPermanentAttack().isEmpty()){
-                            s.append(attack(m,attacker,targets));
+                            s.append(BattleAttacks.attack(m, attacker, targets));
                             attacker.decreasePermanentAttack(m);
                         }
                         else {
-                            try{
+                            try {
                                 int turns = Integer.parseInt(split[2]);
-                                attacker.setPermanentAttack(m,turns);
+                                attacker.setPermanentAttack(m, turns);
                                 s.append(String.format("%s is preparing an attack !", attacker.getName()));
-                                s.append(attack(m,attacker,targets));
-                            }
-                            catch (NumberFormatException e){
+                                s.append(BattleAttacks.attack(m, attacker, targets));
+                            } catch (NumberFormatException e) {
                                 throw new WrongDescriptionException(desc);
                             }
                         }
@@ -193,28 +190,14 @@ public final class LexicalAdaptater {
                         throw new WrongDescriptionException(desc);
                 }
             }
+            if (nextIndex == -1)
+                return "";
+            else {
+                s.append(runMoveRecursive(m, attacker, targets, actualDescription.substring(nextIndex)));
+                return s.toString();
+            }
         }
-
-        return "";
     }
-
-    //TODO: calculate the damage to be dealt to the targets by the attacker
-    //Calculates the damage to be deal to the target, updates the Pokemons and return the effectiveness.
-    private static String attack(Move m,Pokemon attacker,Pokemon[] targets){
-        return "";
-    }
-
-    //Confuses the targets
-    //Note : We assume that all Pokemons can be confused, other
-    private static String confuse(Pokemon[] targets){
-        StringBuilder s = new StringBuilder();
-        for (Pokemon p :targets) {
-            p.addOtherStatus(new Status("Confusion"));
-            s.append(String.format("%s is now confused !",p.getName()));
-        }
-        return s.toString();
-    }
-
 
 
     //TODO : Generate an Item from a String
