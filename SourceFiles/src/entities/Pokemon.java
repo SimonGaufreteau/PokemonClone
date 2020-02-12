@@ -171,14 +171,21 @@ public class Pokemon extends PokemonAbstract {
 
     public void updateHps(int n){
         int test =actualStats.getHp()+n;
-        if (test<=0){
+        if (test <= 0) {
             actualStats.setHp(0);
-        }
-        else actualStats.setHp(Math.min(test, stats.getHp()));
+        } else actualStats.setHp(Math.min(test, stats.getHp()));
     }
 
     public Stats getIV() {
         return IV;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public static String[][] getEffectedStats() {
+        return effectedStats;
     }
 
     public Status getStatus() {
